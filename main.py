@@ -31,8 +31,10 @@ def write_playlist(spotify: spotipy.Spotify,
     output_object = {}
 
     if 'images' in playlist['object']:
-        image = playlist['object']['images'][0]
-        output_object['image_url'] = image['url']
+        images = playlist['object']['images']
+        if images:
+            image = playlist['object']['images'][0]
+            output_object['image_url'] = image['url']
 
     tracks_result = results['items']
     new_tracks = get_tracks(tracks_result)
@@ -49,7 +51,7 @@ def write_playlist(spotify: spotipy.Spotify,
 
     print("Found "+str(len(output_object['tracks'])) +" songs")
 
-    filename = 'playlists/'+playlist['name'].replace(' ', '_')+".json"
+    filename = ('playlists/'+playlist['name'].replace(' ', '_').replace('/','')+".json")
     pathlib.Path('playlists').mkdir(parents=True, exist_ok=True)
 
     with open(filename, 'w+') as file:
